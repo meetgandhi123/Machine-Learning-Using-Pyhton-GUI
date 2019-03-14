@@ -3,3 +3,9 @@ A GUI based ( Tkinter) python program that allows user to apply any machine lear
 
 Requirements: Python 3 , pandas , matplotlib.
 
+Steps to follow:
+
+1) Select which regression you want to apply.
+2) Give path of file using browsing options.
+3) Provide corrosponding axis value and index position starting with zero.
+4) Graph of selected regression can be obtain as output.
