@@ -143,30 +143,6 @@ w.grid(column=0,row=1)
 b2=Button(master,text="select CSV File",command=open_file)
 b2.grid(column=0,row=2)
 
-'''#x_axis=IntVar()
-Label(master,text="x_axis").grid(column=0,row=3)
-x_axis=StringVar()
-e1=Entry(master,width=20,textvariable=x_axis)
-e1.grid(column=0,row=4)
-    
-#y_axis=IntVar()
-Label(master,text="y_axis").grid(column=1,row=3)
-y_axis=StringVar()
-e2=Entry(master,width=20,textvariable=y_axis)
-e2.grid(column=1,row=4)
-
-
-x_axis_int=IntVar()
-Label(master,text="array index of x").grid(column=0,row=5)
-e1=Entry(master,width=20,textvariable=x_axis_int)
-e1.grid(column=0,row=6)
-    
-y_axis_int=IntVar()
-Label(master,text="array index of y").grid(column=1,row=5)
-e2=Entry(master,width=20,textvariable=y_axis_int)
-e2.grid(column=1,row=6)
-'''
-
 b2=Button(master,text="show result",command=show_result)
 b2.grid(column=3,row=1)
 
