@@ -7,46 +7,116 @@ Created on Mon Feb 11 02:19:10 2019
 
 from tkinter import filedialog
 from tkinter import *
+import pandas as pd
+dataset = pd.read_csv('dataset.csv')
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import rcParams
+from matplotlib.cm import rainbow
+import warnings
+warnings.filterwarnings('ignore')
+rcParams['figure.figsize'] = 10, 10
+from sklearn.preprocessing import MinMaxScaler
+standardScaler = MinMaxScaler
+columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+dataset[columns_to_scale] = standardScaler().fit_transform(dataset[columns_to_scale])
+# create a figure and axis 
+from sklearn.model_selection import train_test_split
+y = dataset['target']
+X = dataset.drop(['target'], axis = 1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+
 
 def show_result():
-    print(master.filename)
+    fp=master.filename
+    print(fp)
     model=variable.get()
-    x_selected=x_axis.get()
-    y_selected=y_axis.get()
-    x_selected_index=x_axis_int.get()
-    y_selected_index=y_axis_int.get()    
-    print(model)
-    print(x_selected)
-    print(y_selected)
-    print(x_selected_index)
-    print(y_selected_index)
-    if(model=="Linear Regression"):
-        import pandas as pd
-        data=pd.read_csv(master.filename)
-        import matplotlib.pyplot as plt
-        array = data.values
-        X = array[:,x_selected_index:x_selected_index+1]
-        Y = array[:,y_selected_index]
-        from sklearn.model_selection import train_test_split  
-        X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size=0.2, shuffle= True)    
-        from sklearn.linear_model import LinearRegression  
-        regressor = LinearRegression()  
-        regressor.fit(X_train,Y_train)
-        Y_pred = regressor.predict(X_test)
-        type(Y_pred)
-        X_test
-        df = pd.DataFrame({'Actual': Y_test, 'Predicted': Y_pred})  
-        a=df["Actual"]
-        pd.to_numeric(a)
-        b=df["Predicted"]
-        pd.to_numeric(b)
-        plt.scatter(X_test,Y_test,color='red')
-        plt.plot(X_test,regressor.predict(X_test),color='blue')
-        plt.grid(True)
-        plt.show()    
-    
-    
-    
+
+    if (model=='Naive Bayes Classifier'):
+        print('code for Naive Bayes Classifier')
+        #importing naive bayes and accuracy mattrix to measure model performance
+        from sklearn.naive_bayes import GaussianNB
+        from sklearn.metrics import accuracy_score
+        data1=pd.read_csv(fp)
+        standardScaler = MinMaxScaler
+        columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+        data1[columns_to_scale] = standardScaler().fit_transform(data1[columns_to_scale])
+        X_test1 = data1[['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal']]
+        y_test1 = data1[['target']]
+        
+        model = GaussianNB()
+        # fit the model with the training data
+        model.fit(X_train,y_train)
+        predict_train = model.predict(X_train)
+        print('Target on train data',predict_train)
+        # predict the target on the train dataset
+        accuracy_train = accuracy_score(y_train,predict_train)
+        print('accuracy_score on train dataset : ', accuracy_train*100)
+        # predict the target on the test dataset
+        predict_test = model.predict(X_test1)
+        print('Target on test data',predict_test)
+        accuracy_test = accuracy_score(y_test1,predict_test)
+        print('accuracy_score on test dataset : ', accuracy_test*100)
+    elif(model=='KNN'):
+        #below is the code for the knn classifier with neighbors ranging from 1-4
+        from sklearn.neighbors import KNeighborsClassifier    
+        from sklearn.metrics import accuracy_score
+        data1=pd.read_csv(fp)
+        standardScaler = MinMaxScaler
+        columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+        data1[columns_to_scale] = standardScaler().fit_transform(data1[columns_to_scale])
+        X_test1 = data1[['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal']]
+        y_test1 = data1[['target']]                
+        knn_scores = []
+        for k in range(1,5):
+            knn_classifier = KNeighborsClassifier(n_neighbors = k)
+            knn_classifier.fit(X_train, y_train)
+            knn_scores.append(knn_classifier.score(X_test, y_test))
+        knn_scores
+        print("We got highest accuracy of {}% with {} nieghbors in KNN clasifier".format(knn_scores[2]*100, 3))
+    elif(model=='Random Forest'):
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.metrics import accuracy_score
+        data1=pd.read_csv(fp)
+        standardScaler = MinMaxScaler
+        columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+        data1[columns_to_scale] = standardScaler().fit_transform(data1[columns_to_scale])
+        X_test1 = data1[['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal']]
+        y_test1 = data1[['target']]  
+        randomForest = RandomForestClassifier()
+        randomForest.fit(X_train,y_train)
+        predict_train = randomForest.predict(X_train)
+        print('Target on train data',predict_train)
+        # predict the target on the train dataset
+        accuracy_train = accuracy_score(y_train,predict_train)
+        print('accuracy_score on train dataset : ', accuracy_train*100)
+        # predict the target on the test dataset
+        predict_test = randomForest.predict(X_test1)
+        print('Target on test data',predict_test)
+        accuracy_test = accuracy_score(y_test1,predict_test)
+        print('accuracy_score on test dataset : ', accuracy_test*100)
+    elif(model=='Decision Tree'):
+        from sklearn import tree
+        from sklearn.metrics import accuracy_score
+        data1=pd.read_csv(fp)
+        standardScaler = MinMaxScaler
+        columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+        data1[columns_to_scale] = standardScaler().fit_transform(data1[columns_to_scale])
+        X_test1 = data1[['age','sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca','thal']]
+        y_test1 = data1[['target']] 
+        decisionTree=tree.DecisionTreeClassifier()
+        decisionTree.fit(X_train,y_train)
+        predict_train = decisionTree.predict(X_train)
+        print('Target on train data',predict_train)
+        # predict the target on the train dataset
+        accuracy_train = accuracy_score(y_train,predict_train)
+        print('accuracy_score on train dataset : ', accuracy_train*100)
+        # predict the target on the test dataset
+        predict_test = decisionTree.predict(X_test1)
+        print('Target on test data',predict_test)
+        accuracy_test = accuracy_score(y_test1,predict_test)
+        print('accuracy_score on test dataset : ', accuracy_test*100)
     
 def open_file():    
     master.filename =  filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
@@ -56,10 +126,10 @@ def open_file():
 
 OPTIONS = [
 "Select model",
-"Linear Regression",
-"Logistic Regression",
-"Polynomial Regression",
-"Stepwise Regression"
+"KNN",
+"Naive Bayes Classifier",
+"Random Forest",
+"Decision Tree"
 ] #etc
 
 master = Tk()
@@ -73,7 +143,7 @@ w.grid(column=0,row=1)
 b2=Button(master,text="select CSV File",command=open_file)
 b2.grid(column=0,row=2)
 
-#x_axis=IntVar()
+'''#x_axis=IntVar()
 Label(master,text="x_axis").grid(column=0,row=3)
 x_axis=StringVar()
 e1=Entry(master,width=20,textvariable=x_axis)
@@ -95,10 +165,10 @@ y_axis_int=IntVar()
 Label(master,text="array index of y").grid(column=1,row=5)
 e2=Entry(master,width=20,textvariable=y_axis_int)
 e2.grid(column=1,row=6)
-
+'''
 
 b2=Button(master,text="show result",command=show_result)
-b2.grid(column=1,row=7)
+b2.grid(column=3,row=1)
 
 
 mainloop()
