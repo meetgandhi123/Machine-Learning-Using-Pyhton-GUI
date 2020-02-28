@@ -10,5 +10,10 @@ Steps to follow (Users):
 ![](images/select.JPG)
 
 2) Give the path of the file using browsing options.
+
+![](images/path.JPG)
+
 3) press show results for obtaining accuracy on the testing data provided.
+
+![](images/op.JPG)
 
